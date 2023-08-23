@@ -126,7 +126,14 @@
         }
       } else if (regex_scope.test(key)) {
         // parse scope translations
-        const { scope, skey } = key.match(regex_scope).groups
+        let { scope, skey } = key.match(regex_scope).groups
+
+        if (scope.startsWith('@')) {
+          scope = scope.replace('@', '')
+        } else {
+          scope = '#' + scope
+        }
+
         i18nScope[scope] ||= {}
         i18nScope[scope][skey] = value
 
@@ -267,9 +274,9 @@
       scopes = scopedSource[source]
 
     if (scopes) {
-      console.log('scope', el, source);
+      console.log('scope', el, source, scopes);
       for (let scope of scopes) {
-        if (el.parentElement.closest(`#${scope}`)) {
+        if (el.parentElement.closest(scope)) {
           translation = i18nScope[scope][source]
           break
         }
