@@ -97,7 +97,7 @@
   let i18n = null, i18nRegex = {}, i18nScope = {}, scopedSource = {}, config = null;
 
   // First load
-  function setup() {
+  async function setup() {
     config = {
       enabled: opts["bilingual_localization_enabled"],
       file: opts["bilingual_localization_file"],
@@ -140,11 +140,11 @@
     logger.log('i18nScope', i18nScope)
     logger.groupEnd()
 
-    translatePage()
-    handleDropdown()
+    await translatePage()
+    await handleDropdown()
   }
 
-  function handleDropdown() {
+  async function handleDropdown() {
     // process gradio dropdown menu
     delegateEvent(gradioApp(), 'mousedown', 'ul.options .item', function (event) {
       const { target } = event
@@ -167,7 +167,7 @@
   }
 
   // Translate page
-  function translatePage() {
+  async function translatePage() {
     if (!i18n) return
 
     logger.time('Full Page')
@@ -454,7 +454,7 @@
     })
   }())
 
-  function init() {
+  async function init() {
     // Add style to dom
     let $styleEL = document.createElement('style');
 
