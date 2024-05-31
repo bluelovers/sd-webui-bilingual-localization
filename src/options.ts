@@ -75,9 +75,14 @@ function initConfig()
 
 export async function loadLocalization(dirs: IDirs, file: string)
 {
-	initLocalization();
+	const responseText = await readFile(dirs[file])
+		.then(value => {
+			initLocalization();
+			return value
+		})
+	;
 
-	i18n = JSON.parse(await readFile(dirs[file]), (key, value) =>
+	i18n = JSON.parse(responseText, (key, value) =>
 	{
 		// parse regex translations
 		if (key.startsWith('@@'))

@@ -12,6 +12,11 @@
 	font-style: normal;
 }
 
+.bilingual__trans_wrapper > em.bilingual__trans_source
+{
+	font-size: 0.8em;
+}
+
 #txtimg_hr_finalres .bilingual__trans_wrapper em,
 #tab_ti .output-html .bilingual__trans_wrapper em,
 #tab_ti .gradio-html .bilingual__trans_wrapper em,

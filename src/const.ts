@@ -26,5 +26,7 @@ export const enum EnumBiligualPlaceholder
 	 */
 	will_be_replaced = '__biligual__will_be_replaced__',
 
-	trans_wrapper = 'bilingual__trans_wrapper'
+	trans_wrapper = 'bilingual__trans_wrapper',
+
+	trans_source = 'bilingual__trans_source',
 }

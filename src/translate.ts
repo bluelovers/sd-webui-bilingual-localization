@@ -4,6 +4,7 @@ import { htmlEncode, parseHtmlStringToElement } from './html';
 import { EnumBiligualPlaceholder, ignore_selector } from './const';
 import { _gradioApp, querySelectorAll } from './dom';
 import { IElement, IMutationRecord } from './types';
+import { classListContains } from './util';
 
 const re_num = /^[\.\d]+$/;
 const re_emoji = /[\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}\u{1F9B0}-\u{1F9B3}]/u;
@@ -55,8 +56,8 @@ function doTranslate(el: IElement, source: string, type: EnumTranslateType)
 
 	if (!translation || source === translation)
 	{
-		if (el.textContent === '__biligual__will_be_replaced__') el.textContent = source // restore original text if translation not exist
-		if (el.nextSibling?.className === 'bilingual__trans_wrapper') el.nextSibling.remove() // remove exist translation if translation not exist
+		if (el.textContent === EnumBiligualPlaceholder.will_be_replaced) el.textContent = source // restore original text if translation not exist
+		if (classListContains(el.nextSibling, EnumBiligualPlaceholder.trans_wrapper)) el.nextSibling.remove() // remove exist translation if translation not exist
 		return
 	}
 
@@ -65,6 +66,8 @@ function doTranslate(el: IElement, source: string, type: EnumTranslateType)
 		[source, translation] = [translation, source]
 	}
 
+	const isTranslationIncludeSource = translation.startsWith(source);
+
 	switch (type)
 	{
 		case EnumTranslateType.text:
@@ -72,8 +75,22 @@ function doTranslate(el: IElement, source: string, type: EnumTranslateType)
 			break;
 
 		case EnumTranslateType.element:
-			const htmlStr = `<div class="bilingual__trans_wrapper">${htmlEncode(translation)}<em>${htmlEncode(source)}</em></div>`
-			const htmlEl = parseHtmlStringToElement(htmlStr)
+
+			if (isTranslationIncludeSource)
+			{
+				if (el.nodeType === 3)
+				{
+					el.nodeValue = translation;
+				}
+				else if (htmlEncode(el.textContent) === el.innerHTML)
+				{
+					el.innerHTML = htmlEncode(translation)
+				}
+				break;
+			}
+
+			const htmlEl = parseHtmlStringToElement(`<div class="${EnumBiligualPlaceholder.trans_wrapper}">${htmlEncode(translation)}<em class="${EnumBiligualPlaceholder.trans_source}">${htmlEncode(source)}</em></div>`)
+
 			if (el.hasChildNodes())
 			{
 				const textNode = Array.from(el.childNodes).find(node =>
@@ -84,28 +101,28 @@ function doTranslate(el: IElement, source: string, type: EnumTranslateType)
 				if (textNode)
 				{
 					textNode.textContent = ''
-					if (textNode.nextSibling?.className === 'bilingual__trans_wrapper') textNode.nextSibling.remove()
+					if (classListContains(textNode.nextSibling, EnumBiligualPlaceholder.trans_wrapper)) textNode.nextSibling.remove()
 					textNode.parentNode.insertBefore(htmlEl, textNode.nextSibling)
 				}
 			}
 			else
 			{
 				el.textContent = ''
-				if (el.nextSibling?.className === 'bilingual__trans_wrapper') el.nextSibling.remove()
+				if (classListContains(el.nextSibling, EnumBiligualPlaceholder.trans_wrapper)) el.nextSibling.remove()
 				el.parentNode.insertBefore(htmlEl, el.nextSibling)
 			}
 			break;
 
 		case EnumTranslateType.option:
-			el.textContent = `${translation} (${source})`
+			el.textContent = isTranslationIncludeSource ? translation : `${translation} (${source})`
 			break;
 
 		case EnumTranslateType.title:
-			el.title = `${translation}\n${source}`
+			el.title = isTranslationIncludeSource ? translation : `${translation}\n${source}`
 			break;
 
 		case EnumTranslateType.placeholder:
-			el.placeholder = `${translation}\n\n${source}`
+			el.placeholder = isTranslationIncludeSource ? translation : `${translation}\n\n${source}`
 			break;
 
 		default:
@@ -221,7 +238,7 @@ async function handleDropdown()
 	{
 		const { target } = event
 
-		if (!target.classList.contains('item'))
+		if (!classListContains(target, 'item'))
 		{
 			// simulate click menu item
 			target.closest('.item').dispatchEvent(new Event('mousedown', { bubbles: true }))
@@ -275,7 +292,7 @@ export function initObserver()
 			{
 				mutation.addedNodes.forEach(node =>
 				{
-					if (node.classList?.contains(EnumBiligualPlaceholder.trans_wrapper)) return
+					if (classListContains(node, EnumBiligualPlaceholder.trans_wrapper)) return
 
 					_nodesCount++
 					if (node.nodeType === 1 && /(output|gradio)-(html|markdown)/.test(node.className))
