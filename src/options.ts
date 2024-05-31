@@ -19,10 +19,16 @@ export let config: ReturnType<typeof initConfig>;
  */
 function readFile(filePath: string)
 {
-	let request = new XMLHttpRequest();
-	request.open("GET", `file=${filePath}`, false);
-	request.send(null);
-	return request.responseText;
+	logger.info('readFile', `file=${filePath}`)
+
+	return fetch(`file=${filePath}`, {
+		method: 'GET',
+	}).then(res => res.text())
+
+//	let request = new XMLHttpRequest();
+//	request.open("GET", `file=${filePath}`, false);
+//	request.send(null);
+//	return request.responseText;
 }
 
 function initLocalization()
@@ -71,7 +77,7 @@ export async function loadLocalization(dirs: IDirs, file: string)
 {
 	initLocalization();
 
-	i18n = JSON.parse(readFile(dirs[file]), (key, value) =>
+	i18n = JSON.parse(await readFile(dirs[file]), (key, value) =>
 	{
 		// parse regex translations
 		if (key.startsWith('@@'))
