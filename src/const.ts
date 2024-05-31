@@ -17,6 +17,9 @@ export const ignore_selector = [
 	'.bilingual__trans_source',
 	'.bilingual__trans_ignore, .bilingual__trans_ignore_deep, .bilingual__trans_ignore_deep *',
 	'.shiki, .shiki *',
+	// https://github.com/journey-ad/sd-webui-bilingual-localization/issues/30
+	'.ace_line',
+	'.ace_prompttoken',
 ]
 
 export const enum EnumBiligualPlaceholder
