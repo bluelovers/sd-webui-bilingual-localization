@@ -1,10 +1,15 @@
-/// <reference types="../global.webui.d.ts" preserve="true"/>
+/// <reference types="../global.d.ts" preserve="true"/>
 
 import { run } from './main'
-import Promise from 'core-js-pure/actual/promise';
-import { name } from '../package.json';
+import P from 'core-js-pure/actual/promise';
+import { consoleError, consoleInfo, logger } from './logger';
+import { existsWebuiOpts } from './dom';
 
-(async () => {
+(async () =>
+{
+	let loaded: boolean;
+
+	logger.init('Bilingual');
 
 	function removeCallback(callbacks: Function[], cb: Function)
 	{
@@ -18,46 +23,67 @@ import { name } from '../package.json';
 				callbacks.splice(idx, 1);
 			}
 
-		} while (idx !== -1)
+		}
+		while (idx !== -1)
 	}
 
 	async function onAfterUiLoadedOnce(fn: Function)
 	{
-		let { promise, resolve, reject } = Promise.withResolvers();
+		let { promise, resolve, reject } = (P as typeof Promise).withResolvers();
 		let timers: (number | NodeJS.Timeout)[] = [];
 
-		let timer1 = setInterval(() =>
-		{
-			const loaded = (Object.keys(opts).length !== 0)
-
-			if (loaded)
+		promise
+			.catch(e => {
+				loaded ||= existsWebuiOpts();
+				return Promise.reject(e)
+			})
+			.then(() =>
 			{
-				resolve();
-			}
-		}, 2000);
+				loaded ||= existsWebuiOpts();
+			})
+		;
+
+		let delay = 10000;
 
 		if (typeof onOptionsChanged !== 'undefined')
 		{
 			onOptionsChanged?.(resolve);
 
-			promise = promise.then(() => {
-				if (typeof optionsChangedCallbacks !== 'undefined')
+			promise = promise
+				.then(() =>
 				{
-					removeCallback(optionsChangedCallbacks, resolve)
-				}
-			})
+					if (typeof optionsChangedCallbacks !== 'undefined')
+					{
+						removeCallback(optionsChangedCallbacks, resolve)
+					}
+				})
+			;
+
+			delay = 2000;
 		}
 		else
 		{
-			document.addEventListener('DOMContentLoaded', () => {
-				timers.push(setTimeout(resolve, 10000))
-			})
+//			document.addEventListener('DOMContentLoaded', () => {
+//				timers.push(setTimeout(resolve, 10000))
+//			})
 		}
 
-		timers.push(setTimeout(resolve, 15000));
+		let timer1 = setInterval(async () =>
+		{
+			loaded ||= existsWebuiOpts();
+
+			if (loaded)
+			{
+				// @ts-ignore
+				resolve();
+			}
+		}, delay);
+
+		timers.push(setTimeout(reject, 30000));
 
 		await promise
-			.catch(e => console.error(name, `onAfterUiLoadedOnce`, {
+			.catch(e => consoleError(`onAfterUiLoadedOnce:reject`, {
+				loaded,
 				fn,
 				resolve,
 				promise,
@@ -77,12 +103,23 @@ import { name } from '../package.json';
 					{
 						clearTimeout(ti)
 					}
-					catch (e) {}
+					catch (e)
+					{}
 				}
 			})
 		;
 
-		return fn();
+		(loaded ? consoleInfo : consoleError)(`onAfterUiLoadedOnce:executeCallbacks`, {
+			loaded,
+			fn,
+		});
+
+		if (loaded)
+		{
+			await fn();
+		}
+
+		return
 	}
 
 	return onAfterUiLoadedOnce(run);

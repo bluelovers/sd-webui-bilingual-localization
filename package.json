@@ -94,6 +94,7 @@
     "esbuild-sass-plugin": "^3.3.0",
     "fs-extra": "^11.2.0",
     "stable-diffusion-webui-types": "^1.0.2",
+    "ts-type": "^3.0.1",
     "tslib": ">=2"
   },
   "peerDependencies": {},
