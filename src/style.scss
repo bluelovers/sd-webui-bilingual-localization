@@ -1,9 +1,17 @@
+
+:root
+{
+	--bilingual-text-size-m: calc(var(--body-text-size) + 1px);
+	--bilingual-text-size-s: var(--body-text-size);
+	--bilingual-text-size-source: 0.8em;
+}
+
 .bilingual__trans_wrapper
 {
 	display: inline-flex;
 	flex-direction: column;
 	align-items: center;
-	font-size: 13px;
+	font-size: var(--bilingual-text-size-m);
 	line-height: 1;
 }
 
@@ -14,7 +22,7 @@
 
 .bilingual__trans_wrapper > em.bilingual__trans_source
 {
-	font-size: 0.8em;
+	font-size: var(--bilingual-text-size-source);
 }
 
 #txtimg_hr_finalres .bilingual__trans_wrapper em,
@@ -46,7 +54,7 @@ fieldset > span > .bilingual__trans_wrapper,
 .posex_setting_cont .bilingual__trans_wrapper:not(.posex_bg .bilingual__trans_wrapper), /* Posex extension */
 #dynamic-prompting .bilingual__trans_wrapper
 {
-	font-size: 12px;
+	font-size: var(--bilingual-text-size-s);
 	align-items: flex-start;
 }
 
@@ -60,7 +68,7 @@ fieldset > span > .bilingual__trans_wrapper,
 
 .label-wrap > span:first-of-type
 {
-	font-size: 13px;
+	font-size: var(--bilingual-text-size-m);
 	line-height: 1;
 }
 
