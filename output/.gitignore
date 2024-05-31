@@ -1,0 +1,7 @@
+!/.github/
+!/javascript/
+!/scripts/
+
+!*.js.map
+
+__pycache__/
