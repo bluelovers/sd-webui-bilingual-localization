@@ -3,13 +3,18 @@
 import { run } from './main'
 import P from 'core-js-pure/actual/promise';
 import { consoleError, consoleInfo, logger } from './logger';
-import { existsWebuiOpts } from './dom';
+import { existsWebuiOpts, getWebuiOpts } from './dom';
 
 (async () =>
 {
 	let loaded: boolean;
 
+	const label = 'Bilingual';
+
 	logger.init('Bilingual');
+
+	logger.debug(`${label}:init`);
+	logger.time(`${label}:done`);
 
 	function removeCallback(callbacks: Function[], cb: Function)
 	{
@@ -25,6 +30,21 @@ import { existsWebuiOpts } from './dom';
 
 		}
 		while (idx !== -1)
+	}
+
+	function onDOMContentLoaded(listener: Function)
+	{
+		logger.debug(`document.readyState`, document.readyState);
+		if (document.readyState === "complete")
+		{
+			// @ts-ignore
+			listener();
+		}
+		else
+		{
+			// @ts-ignore
+			document.addEventListener("DOMContentLoaded", listener);
+		}
 	}
 
 	async function onAfterUiLoadedOnce(fn: Function)
@@ -45,9 +65,11 @@ import { existsWebuiOpts } from './dom';
 
 		let delay = 10000;
 
-		if (typeof onOptionsChanged !== 'undefined')
+		let isWebui = typeof onOptionsChanged !== 'undefined';
+
+		if (isWebui)
 		{
-			onOptionsChanged?.(resolve);
+			onOptionsChanged(resolve);
 
 			promise = promise
 				.then(() =>
@@ -59,16 +81,21 @@ import { existsWebuiOpts } from './dom';
 				})
 			;
 
-			delay = 2000;
+			loaded ||= existsWebuiOpts()
+
+			if (loaded)
+			{
+				delay = 0;
+
+				onDOMContentLoaded(() => timers.push(setTimeout(resolve, 1000)))
+			}
 		}
 		else
 		{
-//			document.addEventListener('DOMContentLoaded', () => {
-//				timers.push(setTimeout(resolve, 10000))
-//			})
+			onDOMContentLoaded(() => timers.push(setTimeout(reject, 30000)))
 		}
 
-		let timer1 = setInterval(async () =>
+		let timer1 = delay && setInterval(async () =>
 		{
 			loaded ||= existsWebuiOpts();
 
@@ -78,8 +105,6 @@ import { existsWebuiOpts } from './dom';
 				resolve();
 			}
 		}, delay);
-
-		timers.push(setTimeout(reject, 30000));
 
 		await promise
 			.catch(e => consoleError(`onAfterUiLoadedOnce:reject`, {
@@ -112,6 +137,7 @@ import { existsWebuiOpts } from './dom';
 		(loaded ? consoleInfo : consoleError)(`onAfterUiLoadedOnce:executeCallbacks`, {
 			loaded,
 			fn,
+			opts: getWebuiOpts(),
 		});
 
 		if (loaded)
@@ -122,5 +148,8 @@ import { existsWebuiOpts } from './dom';
 		return
 	}
 
-	return onAfterUiLoadedOnce(run);
+	await onAfterUiLoadedOnce(run);
+
+	logger.timeEnd(`${label}:done`)
 })();
+

@@ -1,4 +1,5 @@
 import { logger } from './logger';
+import { getWebuiOpts } from './dom';
 
 export const i18nRegex = new Map()
 export let i18nScope: Record<string, Record<string, string>> = {};
@@ -51,6 +52,8 @@ export const enum EnumBilingualLocalizationOrder
 
 function initConfig()
 {
+	const opts = getWebuiOpts();
+
 	let config = {
 		enabled: opts["bilingual_localization_enabled"] as boolean,
 		file: opts["bilingual_localization_file"] as string,
@@ -75,6 +78,11 @@ function initConfig()
 
 export async function loadLocalization(dirs: IDirs, file: string)
 {
+	const label = 'loadLocalization';
+
+	logger.debug(`${label}:init`);
+	logger.time(`${label}:done`);
+
 	const responseText = await readFile(dirs[file])
 		.then(value => {
 			initLocalization();
@@ -125,11 +133,13 @@ export async function loadLocalization(dirs: IDirs, file: string)
 		}
 	})
 
+	logger.timeEnd(`${label}:done`)
+
 	logger.group('Localization file loaded.')
-	logger.log('i18n', i18n)
-	logger.log('i18nRegex', i18nRegex)
-	logger.log('i18nScope', i18nScope)
-	logger.log('scopedSource', scopedSource)
+	logger.info('i18n', i18n)
+	logger.info('i18nRegex', i18nRegex)
+	logger.info('i18nScope', i18nScope)
+	logger.info('scopedSource', scopedSource)
 	logger.groupEnd()
 
 	return {

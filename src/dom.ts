@@ -22,3 +22,8 @@ export function existsWebuiOpts()
 {
 	return (typeof opts !== 'undefined' && (Object.keys(opts).length !== 0))
 }
+
+export function getWebuiOpts()
+{
+	return existsWebuiOpts() ? opts : {};
+}

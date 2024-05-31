@@ -10,6 +10,9 @@ import { __ROOT, __ROOT_OUTPUT } from './test/__root';
 import { glob } from 'fs/promises';
 import { copy as copyFile } from 'fs-extra';
 
+// @ts-ignore
+process.env['ESBUILD_MINIFY'] = true;
+
 (async () => {
 	console.log(`build`, __ROOT_OUTPUT)
 	console.log(`outfile`, outfile_main)

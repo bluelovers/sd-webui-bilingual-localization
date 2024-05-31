@@ -226,3 +226,5 @@ dist/*.umd.*.*s
 !/.storybook/
 
 test/fixtures/.gitkeep
+
+__pycache__/

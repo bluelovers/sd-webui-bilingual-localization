@@ -32,3 +32,7 @@ export type IMutationRecord = ITSOverwrite<MutationRecord, {
 	readonly addedNodes: INodeList;
 	readonly target: IChildNode;
 }>
+
+export type IEvent = ITSOverwrite<Event, {
+	target: EventTarget & IElement
+}>

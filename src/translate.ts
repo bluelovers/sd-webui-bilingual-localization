@@ -3,8 +3,8 @@ import { config, EnumBilingualLocalizationOrder, i18n, i18nRegex, i18nScope, sco
 import { htmlEncode, parseHtmlStringToElement } from './html';
 import { EnumBiligualPlaceholder, ignore_selector } from './const';
 import { _gradioApp, querySelectorAll } from './dom';
-import { IElement, IMutationRecord } from './types';
-import { classListContains } from './util';
+import { IElement, IEvent, IMutationRecord } from './types';
+import { classListContains, isIgnoreTranslateNode } from './util';
 
 const re_num = /^[\.\d]+$/;
 const re_emoji = /[\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}\u{1F9B0}-\u{1F9B3}]/u;
@@ -130,16 +130,25 @@ function doTranslate(el: IElement, source: string, type: EnumTranslateType)
 	}
 }
 
+interface IOptionsTranslateEl
+{
+	deep?: boolean,
+	rich?: boolean,
+	addCount?(): void
+}
+
 /**
  * Translate element
  */
 function translateEl(el: IElement, {
 	deep = false,
-	rich = false
-} = {})
+	rich = false,
+	addCount,
+}: IOptionsTranslateEl = {})
 {
-	if (!i18n) return // translation not ready.
-	if (el.matches?.(ignore_selector)) return // ignore some elements.
+	if (isIgnoreTranslateNode(el)) return false // ignore some elements.
+
+	addCount?.();
 
 	if (el.title)
 	{
@@ -190,7 +199,9 @@ function translateEl(el: IElement, {
  */
 async function translatePage()
 {
-	logger.time('Full Page')
+	const label = 'translatePage';
+	logger.debug(`${label}:start`);
+	logger.time(`${label}:done`);
 	querySelectorAll([
 		"label span, fieldset span, button", // major label and button description text
 		"textarea[placeholder], select, option", // text box placeholder and select element
@@ -212,27 +223,36 @@ async function translatePage()
 	])
 		.forEach(el => translateEl(el, { rich: true }))
 
-	logger.timeEnd('Full Page')
+	logger.timeEnd(`${label}:done`)
 }
 
-function delegateEvent(parent: ReturnType<typeof gradioApp>, eventType: string, selector: string, handler)
+function delegateEvent(parent: ReturnType<typeof gradioApp>, eventType: string, selector: string, handler: (evt: IEvent) => void)
 {
 	parent.addEventListener(eventType, function (event)
 	{
-		let target = event.target as EventTarget & IElement;
+		const label = 'handleDropdown:event';
+		logger.debug(`${label}:start`, event);
+		logger.time(`${label}:done`);
+
+		let target = event.target as IEvent["target"];
 		while (target !== parent)
 		{
 			if (target.matches(selector))
 			{
-				handler.call(target, event);
+				handler.call(target, event as IEvent);
 			}
 			target = target.parentNode;
 		}
+
+		logger.timeEnd(`${label}:done`)
 	});
 }
 
 async function handleDropdown()
 {
+	const label = 'handleDropdown';
+	logger.debug(`${label}:init`);
+
 	// process gradio dropdown menu
 	delegateEvent(_gradioApp(), 'mousedown', 'ul.options .item', function (event)
 	{
@@ -240,18 +260,32 @@ async function handleDropdown()
 
 		if (!classListContains(target, 'item'))
 		{
+			let item = target.closest('.item');
+
+			logger.debug(`simulate click menu item`, {
+				event,
+				target,
+				item,
+			});
+
 			// simulate click menu item
-			target.closest('.item').dispatchEvent(new Event('mousedown', { bubbles: true }))
+			item.dispatchEvent(new Event('mousedown', { bubbles: true }))
 			return
 		}
 
-		const source = target.dataset.value
-		const $labelEl = target?.closest('.wrap')?.querySelector('.wrap-inner .single-select') // the label element
+		const source = target.dataset['value']
+		const $labelEl = target?.closest('.wrap')?.querySelector<IElement>('.wrap-inner .single-select') // the label element
 
 		if (source && $labelEl)
 		{
-			$labelEl.title = titles?.[source] || '' // set title from hints.js
-			$labelEl.textContent = EnumBiligualPlaceholder.will_be_replaced // marked as will be replaced
+			const title = titles?.[source];
+			if (title?.length && $labelEl.title !== title)
+			{
+				$labelEl.title = title
+				// set title from hints.js
+			}
+
+			//$labelEl.textContent = EnumBiligualPlaceholder.will_be_replaced // marked as will be replaced
 			doTranslate($labelEl, source, EnumTranslateType.element) // translate the label element
 		}
 	});
@@ -267,12 +301,18 @@ export async function translateAll()
 
 export function initObserver()
 {
+	const label = 'initObserver:init';
+	logger.debug(`${label}:start`);
+	logger.time(`${label}:done`);
+
 	let _count = 0
 
 	// @ts-ignore
-	const observer = new MutationObserver(async (mutations: IMutationRecord[]) =>
+	const observer = new MutationObserver((mutations: IMutationRecord[]) =>
 	{
 		let _nodesCount = 0, _now = performance.now()
+
+		const addCount = () => _nodesCount;
 
 		for (const mutation of mutations)
 		{
@@ -280,24 +320,29 @@ export function initObserver()
 			{
 				if (mutation.target?.parentElement?.parentElement?.tagName === 'LABEL')
 				{
-					translateEl(mutation.target)
+					translateEl(mutation.target, {
+						addCount,
+					})
 				}
 			}
 			else if (mutation.type === 'attributes')
 			{
-				_nodesCount++
-				translateEl(mutation.target)
+				translateEl(mutation.target, {
+					addCount,
+				})
 			}
 			else
 			{
 				mutation.addedNodes.forEach(node =>
 				{
-					if (classListContains(node, EnumBiligualPlaceholder.trans_wrapper)) return
+					if (isIgnoreTranslateNode(node)) return
 
 					_nodesCount++
 					if (node.nodeType === 1 && /(output|gradio)-(html|markdown)/.test(node.className))
 					{
-						translateEl(node, { rich: true })
+						translateEl(node, {
+							rich: true,
+						})
 					}
 					else if (node.nodeType === 3)
 					{
@@ -305,7 +350,9 @@ export function initObserver()
 					}
 					else
 					{
-						translateEl(node, { deep: true })
+						translateEl(node, {
+							deep: true,
+						})
 					}
 				})
 			}
@@ -317,13 +364,15 @@ export function initObserver()
 		}
 	})
 
-	observer.observe(gradioApp(), {
+	observer.observe(_gradioApp(), {
 		characterData: true,
 		childList: true,
 		subtree: true,
 		attributes: true,
 		attributeFilter: ['title', 'placeholder']
 	})
+
+	logger.timeEnd(`${label}:done`);
 
 	return observer
 }
