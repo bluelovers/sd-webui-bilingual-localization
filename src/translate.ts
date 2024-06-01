@@ -1,7 +1,7 @@
 import { logger } from './logger';
 import { config, EnumBilingualLocalizationOrder, i18n, i18nRegex, i18nScope, scopedSource } from './options';
 import { htmlEncode, parseHtmlStringToElement } from './html';
-import { EnumBiligualPlaceholder, ignore_selector } from './const';
+import { EnumBiligualPlaceholder } from './const';
 import { _gradioApp, querySelectorAll } from './dom';
 import { IElement, IEvent, IMutationRecord } from './types';
 import { classListContains, isIgnoreTranslateNode } from './util';

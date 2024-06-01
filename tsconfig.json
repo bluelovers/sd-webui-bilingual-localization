@@ -4,6 +4,7 @@
     "module": "ESNext",
     "target": "ESNext",
     "importHelpers": true,
+    "preserveConstEnums": false,
     "lib": [
       "DOM",
       "DOM.Iterable",

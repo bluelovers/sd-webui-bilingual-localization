@@ -2,6 +2,7 @@
   "name": "sd-webui-bilingual-localization",
   "version": "1.0.0",
   "description": "[中文文档](README_ZH.md) / [日本語](README_JA.md)",
+  "private": true,
   "keywords": [
     "create-by-yarn-tool"
   ],
@@ -46,7 +47,7 @@
     "build:microbundle": "ynpx microbundle --target node",
     "build:tsdx": "ynpx @bluelovers/tsdx build --target node --name index",
     "ci:install": "yarn install --frozen-lockfile && yarn add -W yarn-tool lerna@6 ynpx ts-node ts-jest jest typescript@next @bluelovers/jest-config tsx",
-    "ci:build": "yarn run ci:build:core && yarn run ci:build:commit",
+    "ci:build": "yarn run ci:build:core && yarn run ci:build:commit && yarn run postpublish",
     "ci:build:core": "tsx ./build.ts",
     "ci:build:commit": "git add ./output && git commit ./output -m \"build: update build\" & echo ci:build:commit",
     "npm:publish": "npm publish",

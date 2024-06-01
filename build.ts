@@ -22,6 +22,7 @@ process.env['ESBUILD_MINIFY'] = true;
 		'./README*.md',
 		'LICENSE',
 		'./.github/workflows/build-output.yml',
+		'./CHANGELOG.md',
 	], {
 		cwd: __ROOT,
 	}))
