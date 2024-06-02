@@ -3,20 +3,11 @@ import { config, EnumBilingualLocalizationOrder, i18n, i18nRegex, i18nScope, sco
 import { htmlEncode, parseHtmlStringToElement } from './html';
 import { EnumBiligualPlaceholder } from './const';
 import { _gradioApp, querySelectorAll } from './dom';
-import { IElement, IEvent, IMutationRecord } from './types';
+import { EnumTranslateType, IDoTranslateCb, IElement, IEvent, IMutationRecord, IOptionsTranslateEl } from './types';
 import { classListContains, isIgnoreTranslateNode } from './util';
 
 const re_num = /^[\.\d]+$/;
 const re_emoji = /[\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}\u{1F9B0}-\u{1F9B3}]/u;
-
-export const enum EnumTranslateType
-{
-	'text' = 'text',
-	'element' = 'element',
-	'option' = 'option',
-	'title' = 'title',
-	'placeholder' = 'placeholder',
-}
 
 function checkRegex(source: string)
 {
@@ -30,20 +21,19 @@ function checkRegex(source: string)
 	}
 }
 
-function doTranslate(el: IElement, source: string, type: EnumTranslateType)
+function doTranslate(el: IElement, source: string, type: EnumTranslateType, cb?: IDoTranslateCb, ...args)
 {
 	source = source.trim();
 
-	if (!source?.length) return
-	if (re_num.test(source)) return
+	if (!source.length || re_num.test(source)) return
 	// if (re_emoji.test(source)) return
 
-	let translation = i18n[source] || checkRegex(source),
-		scopes = scopedSource[source]
+	let translation: string
+	const scopes = scopedSource[source];
 
 	if (scopes)
 	{
-		logger.log('scope', el, source, scopes);
+		ESBUILD_DEBUG && logger.debug('doTranslate', 'scope', el, source, scopes);
 		for (let scope of scopes)
 		{
 			if (el.parentElement.closest(scope))
@@ -54,6 +44,8 @@ function doTranslate(el: IElement, source: string, type: EnumTranslateType)
 		}
 	}
 
+	translation ??= i18n[source] || checkRegex(source);
+
 	if (!translation || source === translation)
 	{
 		if (el.textContent === EnumBiligualPlaceholder.will_be_replaced) el.textContent = source // restore original text if translation not exist
@@ -61,17 +53,24 @@ function doTranslate(el: IElement, source: string, type: EnumTranslateType)
 		return
 	}
 
-	if (config.order === EnumBilingualLocalizationOrder.ORIGINAL_FIRST)
+	const isTranslationIncludeSource = translation.startsWith(source);
+
+	const isOriginalFirst = config.order === EnumBilingualLocalizationOrder.ORIGINAL_FIRST;
+
+	/**
+	 * for isOriginalFirst = true
+	 */
+	let translationOnly = translation;
+
+	if (isOriginalFirst)
 	{
 		[source, translation] = [translation, source]
 	}
 
-	const isTranslationIncludeSource = translation.startsWith(source);
-
 	switch (type)
 	{
 		case EnumTranslateType.text:
-			el.textContent = translation
+			el.textContent = translationOnly
 			break;
 
 		case EnumTranslateType.element:
@@ -80,11 +79,11 @@ function doTranslate(el: IElement, source: string, type: EnumTranslateType)
 			{
 				if (el.nodeType === 3)
 				{
-					el.nodeValue = translation;
+					el.nodeValue = translationOnly;
 				}
 				else if (htmlEncode(el.textContent) === el.innerHTML)
 				{
-					el.innerHTML = htmlEncode(translation)
+					el.innerHTML = htmlEncode(translationOnly)
 				}
 				break;
 			}
@@ -95,7 +94,7 @@ function doTranslate(el: IElement, source: string, type: EnumTranslateType)
 			{
 				const textNode = Array.from(el.childNodes).find(node =>
 					node.nodeName === '#text' &&
-					(node.textContent.trim() === source || node.textContent.trim() === '__biligual__will_be_replaced__')
+					(node.textContent.trim() === source || node.textContent.trim() === EnumBiligualPlaceholder.will_be_replaced)
 				)
 
 				if (textNode)
@@ -114,27 +113,22 @@ function doTranslate(el: IElement, source: string, type: EnumTranslateType)
 			break;
 
 		case EnumTranslateType.option:
-			el.textContent = isTranslationIncludeSource ? translation : `${translation} (${source})`
+			el.textContent = isTranslationIncludeSource ? translationOnly : `${translation} (${source})`
 			break;
 
 		case EnumTranslateType.title:
-			el.title = isTranslationIncludeSource ? translation : `${translation}\n${source}`
+			el.title = isTranslationIncludeSource ? translationOnly : `${translation}\n${source}`
 			break;
 
 		case EnumTranslateType.placeholder:
-			el.placeholder = isTranslationIncludeSource ? translation : `${translation}\n\n${source}`
+			el.placeholder = isTranslationIncludeSource ? translationOnly : `${translation}\n\n${source}`
 			break;
 
 		default:
-			return translation
+			return translationOnly
 	}
-}
 
-interface IOptionsTranslateEl
-{
-	deep?: boolean,
-	rich?: boolean,
-	addCount?(): void
+	cb?.(el, isOriginalFirst ? translation : source, type, translationOnly, args);
 }
 
 /**
@@ -144,6 +138,7 @@ function translateEl(el: IElement, {
 	deep = false,
 	rich = false,
 	addCount,
+	cb,
 }: IOptionsTranslateEl = {})
 {
 	if (isIgnoreTranslateNode(el)) return false // ignore some elements.
@@ -152,17 +147,17 @@ function translateEl(el: IElement, {
 
 	if (el.title)
 	{
-		doTranslate(el, el.title, EnumTranslateType.title)
+		doTranslate(el, el.title, EnumTranslateType.title, cb)
 	}
 
 	if (el.placeholder)
 	{
-		doTranslate(el, el.placeholder, EnumTranslateType.placeholder)
+		doTranslate(el, el.placeholder, EnumTranslateType.placeholder, cb)
 	}
 
 	if (el.tagName === 'OPTION')
 	{
-		doTranslate(el, el.textContent, EnumTranslateType.option)
+		doTranslate(el, el.textContent, EnumTranslateType.option, cb)
 	}
 
 	if (deep || rich)
@@ -173,13 +168,13 @@ function translateEl(el: IElement, {
 			{
 				if (rich)
 				{
-					doTranslate(node, node.textContent, EnumTranslateType.text)
+					doTranslate(node, node.textContent, EnumTranslateType.text, cb)
 					return
 				}
 
 				if (deep)
 				{
-					doTranslate(node, node.textContent, EnumTranslateType.element)
+					doTranslate(node, node.textContent, EnumTranslateType.element, cb)
 				}
 			}
 			else if (node.childNodes.length > 0)
@@ -190,7 +185,7 @@ function translateEl(el: IElement, {
 	}
 	else
 	{
-		doTranslate(el, el.textContent, EnumTranslateType.element)
+		doTranslate(el, el.textContent, EnumTranslateType.element, cb)
 	}
 }
 
@@ -230,21 +225,29 @@ function delegateEvent(parent: ReturnType<typeof gradioApp>, eventType: string, 
 {
 	parent.addEventListener(eventType, function (event)
 	{
-		const label = 'handleDropdown:event';
-		logger.debug(`${label}:start`, event);
-		logger.time(`${label}:done`);
-
 		let target = event.target as IEvent["target"];
-		while (target !== parent)
+
+		if (target = target.closest(selector))
 		{
-			if (target.matches(selector))
-			{
-				handler.call(target, event as IEvent);
-			}
-			target = target.parentNode;
+			const label = 'handleDropdown:event';
+			logger.debug(`${label}:start`, event);
+			logger.time(`${label}:done`);
+
+			handler.call(target, event as IEvent);
+
+			logger.timeEnd(`${label}:done`)
 		}
 
-		logger.timeEnd(`${label}:done`)
+//		while (target !== parent)
+//		{
+//			if (target.matches(selector))
+//			{
+//				handler.call(target, event as IEvent);
+//			}
+//			target = target.parentNode;
+//		}
+
+
 	});
 }
 
@@ -262,7 +265,7 @@ async function handleDropdown()
 		{
 			let item = target.closest('.item');
 
-			logger.debug(`simulate click menu item`, {
+			logger.debug(label, `simulate click menu item`, {
 				event,
 				target,
 				item,
@@ -286,7 +289,9 @@ async function handleDropdown()
 			}
 
 			//$labelEl.textContent = EnumBiligualPlaceholder.will_be_replaced // marked as will be replaced
-			doTranslate($labelEl, source, EnumTranslateType.element) // translate the label element
+			doTranslate($labelEl, source, EnumTranslateType.element, (...argv) => {
+				ESBUILD_DEBUG && logger.debug(label, 'doTranslate', argv)
+			}) // translate the label element
 		}
 	});
 }
@@ -303,7 +308,7 @@ export function initObserver()
 {
 	const label = 'initObserver:init';
 	logger.debug(`${label}:start`);
-	logger.time(`${label}:done`);
+	ESBUILD_DEBUG && logger.time(`${label}:done`);
 
 	let _count = 0
 
@@ -318,10 +323,15 @@ export function initObserver()
 		{
 			if (mutation.type === 'characterData')
 			{
-				if (mutation.target?.parentElement?.parentElement?.tagName === 'LABEL')
+				const parent = mutation.target?.parentElement?.parentElement;
+				if (parent?.tagName === 'LABEL')
 				{
 					translateEl(mutation.target, {
 						addCount,
+						cb(...argv)
+						{
+							logger.debug(label, `translateEl`, 'characterData', parent, argv);
+						},
 					})
 				}
 			}
@@ -329,6 +339,10 @@ export function initObserver()
 			{
 				translateEl(mutation.target, {
 					addCount,
+					cb(...argv)
+					{
+						ESBUILD_DEBUG && logger.debug(label, `translateEl`, 'attributes', argv);
+					},
 				})
 			}
 			else
@@ -372,7 +386,7 @@ export function initObserver()
 		attributeFilter: ['title', 'placeholder']
 	})
 
-	logger.timeEnd(`${label}:done`);
+	ESBUILD_DEBUG && logger.timeEnd(`${label}:done`);
 
 	return observer
 }

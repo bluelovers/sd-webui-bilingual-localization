@@ -36,3 +36,30 @@ export type IMutationRecord = ITSOverwrite<MutationRecord, {
 export type IEvent = ITSOverwrite<Event, {
 	target: EventTarget & IElement
 }>
+
+export const enum EnumTranslateType
+{
+	'text' = 'text',
+	'element' = 'element',
+	'option' = 'option',
+	'title' = 'title',
+	'placeholder' = 'placeholder',
+}
+
+export type IDoTranslateCb = (
+	el: IElement,
+	source: string,
+	type: EnumTranslateType,
+	translation: string,
+	opts?: unknown,
+) => void;
+
+export interface IOptionsTranslateEl
+{
+	deep?: boolean,
+	rich?: boolean,
+
+	addCount?(): void
+
+	cb?: IDoTranslateCb
+}
