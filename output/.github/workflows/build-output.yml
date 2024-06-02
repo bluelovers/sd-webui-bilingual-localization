@@ -109,3 +109,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: dev
+          tags: true
+          force_with_lease: true

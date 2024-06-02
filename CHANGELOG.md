@@ -6,6 +6,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 # 1.0.0 (2024-06-02)
 
 
+
+### ⚙️　Continuous Integration
+
+* tags , force_with_lease ([77925ed](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/77925ed08fa6a96947a1ab4b79fac65ab5962e4d))
+* update build script ([edcbe37](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/edcbe37dfd93dcad0c9ec50fa30eb13d77003edd))
+
+
+
+# 1.0.0 (2024-06-02)
+
+
 ### BREAKING CHANGES
 
 * 原版錯誤修正 以及 增加除錯訊息
