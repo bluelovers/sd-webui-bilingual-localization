@@ -2,16 +2,16 @@
 
 import { build } from 'esbuild'
 import { join } from 'path'
-import { copy } from 'esbuild-plugin-copy';
 import { main as outfile_main } from './package.json';
 
 import { sassPlugin } from 'esbuild-sass-plugin'
-import { __ROOT, __ROOT_OUTPUT } from './test/__root';
+import { __ROOT, __ROOT_OUTPUT, isWin } from './test/__root';
 import { glob } from 'fs/promises';
 import { copy as copyFile } from 'fs-extra';
 
-// @ts-ignore
-process.env['ESBUILD_MINIFY'] = true;
+const ESBUILD_DEBUG = Boolean(process.env['ESBUILD_DEBUG'] ?? isWin);
+
+const ESBUILD_MINIFY = Boolean(process.env['ESBUILD_MINIFY'] ?? !ESBUILD_DEBUG);
 
 (async () => {
 	console.log(`build`, __ROOT_OUTPUT)
@@ -33,11 +33,33 @@ process.env['ESBUILD_MINIFY'] = true;
 		})
 	}
 
-	await build({
+	await buildTarget({
+		ESBUILD_DEBUG,
+		outFileName: outfile_main,
+	});
+
+	if (!ESBUILD_DEBUG || true)
+	{
+		await buildTarget({
+			ESBUILD_DEBUG: true,
+			outFileName: outfile_main + '-dev.js',
+		});
+	}
+})();
+
+function buildTarget({
+	ESBUILD_DEBUG,
+	outFileName,
+}: {
+	ESBUILD_DEBUG: boolean,
+	outFileName: string,
+})
+{
+	return build({
 		entryPoints: [
 			join(__ROOT, 'src/index.mts')
 		],
-		outfile: join(__ROOT_OUTPUT, 'javascript', outfile_main),
+		outfile: join(__ROOT_OUTPUT, 'javascript', outFileName),
 		bundle: true,
 		plugins: [
 			sassPlugin({
@@ -47,14 +69,17 @@ process.env['ESBUILD_MINIFY'] = true;
 		],
 		platform: 'browser',
 		treeShaking: true,
-		sourcemap: true,
+		sourcemap: ESBUILD_DEBUG ? 'both' : true,
 		// @ts-ignore
 		//analyze: true,
 		legalComments: 'none',
 		allowOverwrite: true,
 		minifySyntax: true,
 		format: 'iife',
-		minify: Boolean(process.env['ESBUILD_MINIFY']),
+		minify: ESBUILD_MINIFY,
 		jsxSideEffects: false,
+		define: {
+			ESBUILD_DEBUG: ESBUILD_DEBUG.toString(),
+		}
 	})
-})();
+}

@@ -19,4 +19,8 @@ declare global {
 		localization: any;
 	}
 
+	var ESBUILD_DEBUG: boolean
+
 }
+
+var ESBUILD_DEBUG: boolean
