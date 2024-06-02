@@ -1,6 +1,7 @@
 import { logger } from './logger';
 import { getConfig, loadLocalization } from './options';
 import { initObserver, translateAll } from './translate';
+import P from 'core-js-pure/actual/promise';
 
 export async function run()
 {
@@ -24,6 +25,10 @@ export async function run()
 	{
 		await translateAll();
 
-		initObserver();
+		let { promise, resolve, reject } = (P as typeof Promise).withResolvers();
+
+		setTimeout(resolve, 5000);
+
+		await promise.then(initObserver)
 	}
 }
