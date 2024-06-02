@@ -6,6 +6,11 @@
 	--bilingual-text-size-source: 0.8em;
 }
 
+@mixin font-size-auto($base-size, $default-size: var(--bilingual-text-size-m), $base-p: 0.85)
+{
+	font-size: max($default-size, calc($base-size * $base-p));
+}
+
 .bilingual__trans_wrapper
 {
 	display: inline-flex;
@@ -22,6 +27,17 @@
 	> em.bilingual__trans_source
 	{
 		font-size: var(--bilingual-text-size-source);
+	}
+
+	#settings > div.tab-nav button > &
+	, #quicksettings div.tab-nav button > &
+	{
+		@include font-size-auto(var(--section-header-text-size))
+	}
+
+	.lg.gradio-button > &
+	{
+		@include font-size-auto(var(--button-large-text-size), 0.9)
 	}
 }
 
