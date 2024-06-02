@@ -11,8 +11,6 @@ import { copy as copyFile } from 'fs-extra';
 
 const ESBUILD_DEBUG = Boolean(process.env['ESBUILD_DEBUG'] ?? isWin);
 
-const ESBUILD_MINIFY = Boolean(process.env['ESBUILD_MINIFY'] ?? !ESBUILD_DEBUG);
-
 (async () => {
 	console.log(`build`, __ROOT_OUTPUT)
 	console.log(`outfile`, outfile_main)
@@ -55,6 +53,8 @@ function buildTarget({
 	outFileName: string,
 })
 {
+	const ESBUILD_MINIFY = Boolean(process.env['ESBUILD_MINIFY'] ?? !ESBUILD_DEBUG);
+
 	return build({
 		entryPoints: [
 			join(__ROOT, 'src/index.mts')
