@@ -5,3 +5,7 @@
 !*.js.map
 
 __pycache__/
+
+*dev.js
+*dev.js.map
+*js-dev.*
