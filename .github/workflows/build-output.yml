@@ -110,10 +110,14 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: dev
 #          tags: true
-          force_with_lease: true
+#          force_with_lease: true
       -
         name: Push changes tags
         if: success()
-        run: |
-          git push refs/tags/sd-webui-bilingual-localization@1.0.0 --force
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: dev
+          tags: true
+          force: true
 
