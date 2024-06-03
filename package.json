@@ -78,7 +78,7 @@
     "postpublish:changelog": "ynpx --quiet @yarn-tool/changelog && git add ./CHANGELOG.md & echo postpublish:changelog",
     "postpublish:git:commit": "git commit -m \"chore(release): publish\" & echo postpublish:git:commit",
     "postpublish:git:push": "git push --follow-tags",
-    "postpublish:git:tag": "ynpx --quiet @yarn-tool/tag",
+    "postpublish:git:tag": "ynpx --quiet @yarn-tool/tag -- -f",
     "postpublishOnly": "echo postpublishOnly",
     "ncu": "yarn-tool ncu -u",
     "sort-package-json": "yarn-tool sort",
