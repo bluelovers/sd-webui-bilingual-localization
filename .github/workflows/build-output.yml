@@ -9,6 +9,7 @@ on:
       - '.github/workflows/build-output.yml'
       - 'scripts/**'
       - 'src/**'
+      - 'docs/**'
       - 'README.md'
 #  schedule:
 ## https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows#scheduled-events-schedule
