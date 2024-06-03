@@ -5,7 +5,7 @@
 # sd-webui-bilingual-localization
 [Stable Diffusion web UI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) 双语对照翻译插件
 
-> 參考自 [journey-ad](https://github.com/journey-ad/sd-webui-bilingual-localization) 的原始碼，以 TypeScript 重製，以利於改善錯誤修正以及效能提升。
+> 重構自 [journey-ad 的 Bilingual Localization](https://github.com/journey-ad/sd-webui-bilingual-localization)，以 TypeScript 重構，改善錯誤修正以及效能提升。。
 
 ![img.png](docs/img.png)
 
