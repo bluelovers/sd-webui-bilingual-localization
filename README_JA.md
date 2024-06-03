@@ -5,7 +5,9 @@
 # sd-webui-bilingual-localization
 [Stable Diffusion web UI](https://github.com/AUTOMATIC1111/stable-diffusion-webui)のバイリンガル対応拡張機能
 
-![Snipaste_2023-03-30_01-05-45](https://user-images.githubusercontent.com/16256221/228617304-3107244b-ce13-4b96-b665-1d13090d24a7.png)
+> [journey-ad](https://github.com/journey-ad/sd-webui-bilingual-localization) のソースコードを参考に、TypeScript で書き換えて、バグ修正とパフォーマンス向上の機能を強化しました。
+
+![img.png](docs/img.png)
 
 ## 特徴
 - バイリンガル対応により、元のボタンを探す必要がありません。

@@ -5,7 +5,9 @@
 # sd-webui-bilingual-localization
 [Stable Diffusion web UI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) bilingual localization extensions.
 
-![Snipaste_2023-03-30_01-05-45](https://user-images.githubusercontent.com/16256221/228617304-3107244b-ce13-4b96-b665-1d13090d24a7.png)
+> Refactored from [journey-ad](https://github.com/journey-ad/sd-webui-bilingual-localization), rewritten in TypeScript for improved bug fixes and performance enhancements.
+
+![img.png](docs/img.png)
 
 ## Features
 - Bilingual translation, no need to worry about how to find the original button.
@@ -23,7 +25,7 @@ Use the `Install from URL` provided by webui to install
 
 Click in order <kbd>Extensions</kbd> - <kbd>Install from URL</kbd>
 
-Then fill in the first text box with `https://github.com/journey-ad/sd-webui-bilingual-localization`, click the <kbd>Install</kbd> button.
+Then fill in the first text box with `https://github.com/bluelovers/sd-webui-bilingual-localization.git`, click the <kbd>Install</kbd> button.
 
 ![Snipaste_2023-02-28_00-27-48](https://user-images.githubusercontent.com/16256221/221625310-a6ef0b4c-a1e0-46bb-be9c-6d88cd0ad684.png)
 
@@ -37,7 +39,7 @@ After that, switch to the <kbd>Installed</kbd> panel and click the <kbd>Apply an
 Clone to your extension directory manually.
 
 ```bash
-git clone https://github.com/journey-ad/sd-webui-bilingual-localization extensions/sd-webui-bilingual-localization
+git clone https://github.com/bluelovers/sd-webui-bilingual-localization.git extensions/sd-webui-bilingual-localization
 ```
 
 ## Usage

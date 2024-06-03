@@ -21,6 +21,7 @@ const ESBUILD_DEBUG = Boolean(process.env['ESBUILD_DEBUG'] ?? isWin);
 		'LICENSE',
 		'./.github/workflows/build-output.yml',
 		'./CHANGELOG.md',
+		'./docs/**/*',
 	], {
 		cwd: __ROOT,
 	}))
