@@ -8,9 +8,11 @@ on:
     paths:
       - '.github/workflows/build-output.yml'
       - 'scripts/**'
+      - 'test/scripts/**'
       - 'src/**'
       - 'docs/**'
       - 'README.md'
+      - 'build.ts'
 #  schedule:
 ## https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows#scheduled-events-schedule
 ##            ┌───────────── minute (0 - 59)
