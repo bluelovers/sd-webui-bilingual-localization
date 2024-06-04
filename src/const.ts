@@ -22,8 +22,8 @@ export const ignore_selector = ([
 		'#lobe_highlighter',
 		'.shiki',
 
-		`#${EnumBiligualPlaceholder.trans_ignore_deep}`,
-		`#${EnumBiligualPlaceholder.trans_source}`,
+		`.${EnumBiligualPlaceholder.trans_ignore_deep}`,
+		`.${EnumBiligualPlaceholder.trans_source}`,
 
 		'.progress',
 		'.progress-text',
