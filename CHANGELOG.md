@@ -7,6 +7,21 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+### ⚙️　Continuous Integration
+
+* . ([0b67d58](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/0b67d58cf793abeed2fef356a21cbd37ba75de64))
+
+
+### 🔖　Miscellaneous
+
+* . ([05d2f32](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/05d2f321528741d100f05c52afbd7990b12b3275))
+
+
+
+# 1.0.0 (2024-06-04)
+
+
+
 ### 🐛　Bug Fixes
 
 * { `#` => `.` } ([d2eb7f5](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/d2eb7f56ee1ca76fe555c075cbb4ce12fb43a82a))
