@@ -374,7 +374,7 @@ export function initObserver()
 
 		if (_nodesCount > 0)
 		{
-			logger.info(`UI Update #${_count++}: ${performance.now() - _now} ms, ${_nodesCount} nodes`, mutations)
+			ESBUILD_DEBUG && logger.info(`UI Update #${_count++}: ${performance.now() - _now} ms, ${_nodesCount} nodes`, mutations)
 		}
 	})
 
