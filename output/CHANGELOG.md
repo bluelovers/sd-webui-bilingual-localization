@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0 (2024-06-03)
+
+
+
+### ⚙️　Continuous Integration
+
+* 'docs/**' ([e5dd8f2](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/e5dd8f280a371f2a0ddeff97691c84c417740957))
+* tag 'sd-webui-bilingual-localization@1.0.0' already exists ([e30b98b](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/e30b98b4fe28e88464bc8a8726b470afbab7f64d))
+
+
+
 # 1.0.0 (2024-06-02)
 
 
