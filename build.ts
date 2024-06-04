@@ -6,7 +6,7 @@ import { main as outfile_main } from './package.json';
 
 import { sassPlugin } from 'esbuild-sass-plugin'
 import { __ROOT, __ROOT_OUTPUT, isWin } from './test/__root';
-import './scripts/copy';
+import './test/scripts/copy';
 
 const ESBUILD_DEBUG = Boolean(process.env['ESBUILD_DEBUG'] ?? isWin);
 
