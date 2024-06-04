@@ -14,6 +14,7 @@ import { existsWebuiOpts, getWebuiOpts } from './dom';
 	logger.init('Bilingual');
 
 	logger.debug(`${label}:init`);
+	ESBUILD_DEBUG && logger.debug(`${label}:debug mode enabled`);
 	logger.time(`${label}:done`);
 
 	function removeCallback(callbacks: Function[], cb: Function)
