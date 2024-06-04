@@ -6,8 +6,7 @@ import { main as outfile_main } from './package.json';
 
 import { sassPlugin } from 'esbuild-sass-plugin'
 import { __ROOT, __ROOT_OUTPUT, isWin } from './test/__root';
-import { glob } from 'fs/promises';
-import { copy as copyFile } from 'fs-extra';
+import './scripts/copy';
 
 const ESBUILD_DEBUG = Boolean(process.env['ESBUILD_DEBUG'] ?? isWin);
 
@@ -15,22 +14,7 @@ const ESBUILD_DEBUG = Boolean(process.env['ESBUILD_DEBUG'] ?? isWin);
 	console.log(`build`, __ROOT_OUTPUT)
 	console.log(`outfile`, outfile_main)
 
-	for await (const file of glob([
-		'./scripts/**/*',
-		'./README*.md',
-		'LICENSE',
-		'./.github/workflows/build-output.yml',
-		'./CHANGELOG.md',
-		'./docs/**/*',
-	], {
-		cwd: __ROOT,
-	}))
-	{
-		await copyFile(join(__ROOT, file), join(__ROOT_OUTPUT, file), {
-			overwrite: true,
-			preserveTimestamps: true,
-		})
-	}
+
 
 	await buildTarget({
 		ESBUILD_DEBUG,

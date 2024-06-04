@@ -48,7 +48,7 @@
     "build:tsdx": "ynpx @bluelovers/tsdx build --target node --name index",
     "ci:install": "yarn install --frozen-lockfile && yarn add -W yarn-tool lerna@6 ynpx ts-node ts-jest jest typescript@next @bluelovers/jest-config tsx",
     "ci:build": "yarn run postpublish:changelog && yarn run ci:build:core && yarn run ci:build:commit && yarn run postpublish",
-    "ci:build:core": "tsx ./build.ts",
+    "ci:build:core": "tsx ./build.ts && tsx ./test/scripts/copy.ts",
     "ci:build:commit": "git add ./output & echo ci:build:commit",
     "npm:publish": "npm publish",
     "npm:publish:bump": "yarn run version:bump && npm publish",
