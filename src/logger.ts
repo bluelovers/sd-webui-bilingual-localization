@@ -22,7 +22,7 @@ function createLogger()
 			{
 				return (enable?: boolean) =>
 				{
-					loggerConf.enable = enable ?? true
+					return loggerConf.enable = enable ?? loggerConf.enable ?? true
 				}
 			}
 
@@ -30,7 +30,7 @@ function createLogger()
 
 			return (...args) =>
 			{
-				if (!loggerConf.enable) return
+				if (!loggerConf.enable && propKey !== 'error') return
 
 				let color = ['#39cfe1', '#006cab']
 
@@ -86,7 +86,7 @@ function createLogger()
 		}
 	}) as typeof console & {
 		init(label: string, enable?: boolean): void,
-		enable(enable?: boolean): void,
+		enable(enable?: boolean): boolean,
 	}
 }
 

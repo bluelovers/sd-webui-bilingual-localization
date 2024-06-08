@@ -20,7 +20,10 @@ export let config: ReturnType<typeof initConfig>;
  */
 function readFile(filePath: string)
 {
-	logger.info('readFile', `file=${filePath}`)
+	const bool = logger.enable();
+	logger.enable(true);
+	logger.info('readFile', `file=${filePath}`);
+	logger.enable(bool);
 
 	return fetch(`file=${filePath}`, {
 		method: 'GET',

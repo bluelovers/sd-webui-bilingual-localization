@@ -13,6 +13,7 @@ async function copy()
 		'./.github/workflows/build-output.yml',
 		'./CHANGELOG.md',
 		'./docs/**/*',
+		'./metadata.ini',
 	], {
 		cwd: __ROOT,
 	}))
