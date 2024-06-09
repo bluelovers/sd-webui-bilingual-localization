@@ -14,20 +14,11 @@ const ESBUILD_DEBUG = Boolean(process.env['ESBUILD_DEBUG'] ?? isWin);
 	console.log(`build`, __ROOT_OUTPUT)
 	console.log(`outfile`, outfile_main)
 
-
-
 	await buildTarget({
 		ESBUILD_DEBUG,
 		outFileName: outfile_main,
 	});
 
-	if (!ESBUILD_DEBUG || true)
-	{
-		await buildTarget({
-			ESBUILD_DEBUG: true,
-			outFileName: outfile_main + '-dev.js',
-		});
-	}
 })();
 
 function buildTarget({
