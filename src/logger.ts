@@ -55,7 +55,8 @@ function createLogger()
 						}
 						return
 					case 'timeEnd':
-						label = args[0], start = loggerTimerMap.get(label)
+						label = args[0];
+						start = loggerTimerMap.get(label)
 						if (start === undefined)
 						{
 							logger.warn(`Timer '${label}' does not exist`)
@@ -91,23 +92,24 @@ function createLogger()
 }
 
 export const logger = createLogger()
+export const loggerShow = createLogger()
 
 export function consoleDebug(...argv)
 {
-	logger.debug(...argv)
+	loggerShow.debug(...argv)
 }
 
 export function consoleLog(...argv)
 {
-	logger.log(...argv)
+	loggerShow.log(...argv)
 }
 
 export function consoleInfo(...argv)
 {
-	logger.info(...argv)
+	loggerShow.info(...argv)
 }
 
 export function consoleError(...argv)
 {
-	logger.error(...argv)
+	loggerShow.error(...argv)
 }

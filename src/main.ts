@@ -1,7 +1,9 @@
-import { logger } from './logger';
+import { consoleDebug, logger, loggerShow } from './logger';
 import { getConfig, loadLocalization } from './options';
 import { initObserver, translateAll } from './translate';
 import P from 'core-js-pure/actual/promise';
+
+loggerShow.init('Bilingual', true);
 
 export async function run()
 {
@@ -12,6 +14,8 @@ export async function run()
 	if (window.localization && Object.keys(window.localization).length) return;
 
 	const config = getConfig();
+
+	consoleDebug('config', config);
 
 	if (!config) return;
 
@@ -25,7 +29,7 @@ export async function run()
 	{
 		await translateAll();
 
-		let { promise, resolve, reject } = (P as typeof Promise).withResolvers();
+		let { promise, resolve } = (P as typeof Promise).withResolvers();
 
 		setTimeout(resolve, 5000);
 

@@ -2,7 +2,7 @@
 
 import { run } from './main'
 import P from 'core-js-pure/actual/promise';
-import { consoleError, consoleInfo, logger } from './logger';
+import { consoleError, consoleInfo, logger, consoleDebug } from './logger';
 import { existsWebuiOpts, getWebuiOpts } from './dom';
 
 (async () =>
@@ -13,8 +13,8 @@ import { existsWebuiOpts, getWebuiOpts } from './dom';
 
 	logger.init('Bilingual');
 
-	logger.debug(`${label}:init`);
-	ESBUILD_DEBUG && logger.debug(`${label}:debug mode enabled`);
+	consoleDebug(`${label}:init`);
+	ESBUILD_DEBUG && consoleDebug(`${label}:debug mode enabled`);
 	logger.time(`${label}:done`);
 
 	function removeCallback(callbacks: Function[], cb: Function)
@@ -22,7 +22,7 @@ import { existsWebuiOpts, getWebuiOpts } from './dom';
 		let idx: number;
 		do
 		{
-			idx = callbacks.findIndex(v => cb);
+			idx = callbacks.findIndex(v => v === cb);
 
 			if (idx !== -1)
 			{

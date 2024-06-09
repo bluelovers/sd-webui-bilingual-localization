@@ -1,4 +1,4 @@
-import { logger } from './logger';
+import { consoleInfo, logger } from './logger';
 import { getWebuiOpts } from './dom';
 
 export const i18nRegex = new Map()
@@ -20,10 +20,7 @@ export let config: ReturnType<typeof initConfig>;
  */
 function readFile(filePath: string)
 {
-	const bool = logger.enable();
-	logger.enable(true);
-	logger.info('readFile', `file=${filePath}`);
-	logger.enable(bool);
+	consoleInfo('readFile', `file=${filePath}`);
 
 	return fetch(`file=${filePath}`, {
 		method: 'GET',

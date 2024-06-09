@@ -18,6 +18,8 @@ I18N_DIRS = ""
 
 def list_localizations():
     dirname = getattr(shared.cmd_opts, "localizations_dir", None) or "localizations"
+    if dirname is None or dirname == "":
+        dirname = "localizations"
 
     localizations.clear()
 
