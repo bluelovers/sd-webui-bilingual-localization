@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0 (2024-06-09)
+
+
+
+### ♻️　Chores
+
+* add more debug info for check error ([71a8800](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/71a88009921d02f38ce77d646783b8c8cd5f28ed)), closes [/github.com/AUTOMATIC1111/stable-diffusion-webui-extensions/pull/323#issuecomment-2155624451](https://github.com//github.com/AUTOMATIC1111/stable-diffusion-webui-extensions/pull/323/issues/issuecomment-2155624451)
+
+
+### 🔖　Miscellaneous
+
+* . ([58fabfd](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/58fabfdb10037d4047728982a1db75a14a41e54d))
+
+
+
 # [1.0.0](https://github.com/journey-ad/sd-webui-bilingual-localization/compare/sd-webui-bilingual-localization@1.0.0...sd-webui-bilingual-localization@1.0.0) (2024-06-08)
 
 
