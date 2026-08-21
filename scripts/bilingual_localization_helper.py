@@ -43,6 +43,7 @@ def list_localizations():
 
     print("localizations: ", localizations)
 
+    global I18N_DIRS
     # I18N_DIRS = {k: str(Path(v).relative_to(ROOT_DIR).as_posix()) for k, v in localizations.items()}
     I18N_DIRS = json.dumps(localizations)
 
