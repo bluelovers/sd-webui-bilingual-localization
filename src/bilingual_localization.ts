@@ -7,7 +7,7 @@
       font-size: 13px;
       line-height: 1;
     }
-    
+
     .bilingual__trans_wrapper em {
       font-style: normal;
     }
@@ -22,7 +22,7 @@
     .gradio-image div[data-testid="image"] .bilingual__trans_wrapper em {
       display: none;
     }
-    
+
     #settings .bilingual__trans_wrapper:not(#settings .tabitem .bilingual__trans_wrapper),
     label>span>.bilingual__trans_wrapper,
     fieldset>span>.bilingual__trans_wrapper,
@@ -59,16 +59,16 @@
     #txt2img_script_container > div {
       margin-top: var(--layout-gap, 12px);
     }
-    
+
     textarea::placeholder {
       line-height: 1;
       padding: 4px 0;
     }
-    
+
     label>span {
       line-height: 1;
     }
-    
+
     div[data-testid="image"] .start-prompt {
       background-color: rgba(255, 255, 255, .6);
       color: #222;
@@ -87,7 +87,7 @@
     .gradio-dropdown ul.options li.item {
       padding: 0.3em 0.4em !important;
     }
-    
+
     /* Posex extension */
     .posex_bg {
       white-space: nowrap;
@@ -112,7 +112,7 @@
 
     dirs = JSON.parse(dirs)
 
-    enableLogger && logger.init('Bilingual')
+    enableLogger && (logger as any).init('Bilingual')
     logger.log('Bilingual Localization initialized.')
 
     // Load localization file
@@ -219,7 +219,7 @@
     'script, style, svg, g, path', // script / style / svg elements
   ]
   // Translate element
-  function translateEl(el, { deep = false, rich = false } = {}) {
+  function translateEl(el: any, { deep = false, rich = false } = {}) {
     if (!i18n) return // translation not ready.
     if (el.matches?.(ignore_selector)) return // ignore some elements.
 
@@ -236,7 +236,7 @@
     }
 
     if (deep || rich) {
-      Array.from(el.childNodes).forEach(node => {
+      Array.from(el.childNodes).forEach((node: any) => {
         if (node.nodeName === '#text') {
           if (rich) {
             doTranslate(node, node.textContent, 'text')
@@ -306,10 +306,10 @@
         const htmlStr = `<div class="bilingual__trans_wrapper">${htmlEncode(translation)}<em>${htmlEncode(source)}</em></div>`
         const htmlEl = parseHtmlStringToElement(htmlStr)
         if (el.hasChildNodes()) {
-          const textNode = Array.from(el.childNodes).find(node =>
+          const textNode = Array.from(el.childNodes).find((node: any) =>
             node.nodeName === '#text' &&
             (node.textContent.trim() === source || node.textContent.trim() === '__biligual__will_be_replaced__')
-          )
+          ) as any
 
           if (textNode) {
             textNode.textContent = ''
@@ -342,7 +342,7 @@
 
   function gradioApp() {
     const elems = document.getElementsByTagName('gradio-app')
-    const elem = elems.length == 0 ? document : elems[0]
+    const elem = elems.length == 0 ? document : elems[0] as any
 
     if (elem !== document) elem.getElementById = function (id) { return document.getElementById(id) }
     return elem.shadowRoot ? elem.shadowRoot : elem
@@ -469,7 +469,7 @@
 
   function init() {
     // Add style to dom
-    let $styleEL = document.createElement('style');
+    let $styleEL = document.createElement('style') as HTMLStyleElement & { styleSheet?: { cssText: string } };
 
     if ($styleEL.styleSheet) {
       $styleEL.styleSheet.cssText = customCSS;
@@ -496,7 +496,7 @@
           _nodesCount++
           translateEl(mutation.target)
         } else {
-          mutation.addedNodes.forEach(node => {
+          mutation.addedNodes.forEach((node: any) => {
             if (node.className === 'bilingual__trans_wrapper') return
 
             _nodesCount++
