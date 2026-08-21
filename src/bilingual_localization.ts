@@ -531,6 +531,24 @@
     })
   }
 
+  // @ts-ignore
+  typeof onUiLoaded === 'undefined' && (onUiLoaded = (fn) => {
+    return document.addEventListener('DOMContentLoaded', fn)
+  });
+
+  function onUiLoadedLazy(cb: Function)
+  {
+    const fn = typeof onUiLoadedReady === 'function' && onUiLoadedReady || typeof onUiLoaded === 'function' && onUiLoaded || (cb => {
+      return document.addEventListener('DOMContentLoaded', cb as any)
+    });
+
+    return fn(cb)
+  }
+
   // Init after page loaded
-  document.addEventListener('DOMContentLoaded', init)
+  onUiLoadedLazy(() => {
+    setTimeout(() => {
+      init()
+    }, 2000)
+  })
 })();

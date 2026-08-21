@@ -43,6 +43,7 @@ def list_localizations():
 
     print("localizations: ", localizations)
 
+    global I18N_DIRS
     # I18N_DIRS = {k: str(Path(v).relative_to(ROOT_DIR).as_posix()) for k, v in localizations.items()}
     I18N_DIRS = json.dumps(localizations)
 
@@ -52,12 +53,10 @@ def list_localizations():
 def refresh_list_localizations(node=None):
     list_localizations()
 
-    if hasattr(shared.opts.data, "bilingual_localization_dirs") or node is not None:
-
-        shared.opts.data["bilingual_localization_dirs"] = I18N_DIRS
-        shared.opts.set("bilingual_localization_dirs", I18N_DIRS)
-        if node is not None:
-            node.value = I18N_DIRS
+    shared.opts.data["bilingual_localization_dirs"] = I18N_DIRS
+    shared.opts.set("bilingual_localization_dirs", I18N_DIRS)
+    if node is not None:
+        node.value = I18N_DIRS
 
 
 # Register extension options
