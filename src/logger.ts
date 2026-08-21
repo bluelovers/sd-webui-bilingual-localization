@@ -28,7 +28,7 @@ function createLogger()
 
 			if (!(propKey in target)) return undefined
 
-			return (...args) =>
+			return (...args: any[]) =>
 			{
 				if (!loggerConf.enable && propKey !== 'error') return
 
@@ -77,7 +77,7 @@ function createLogger()
 					`color: #fff; background: linear-gradient(180deg, ${color[0]}, ${color[1]}); text-shadow: 0px 0px 1px #0003; padding: 3px 5px; border-radius: 4px;`
 				] : []
 
-				target[propKey](...badge, ...args)
+				target[propKey as 'log'](...badge, ...args)
 
 				if (propKey === 'group' || propKey === 'groupCollapsed')
 				{
@@ -94,22 +94,22 @@ function createLogger()
 export const logger = createLogger()
 export const loggerShow = createLogger()
 
-export function consoleDebug(...argv)
+export function consoleDebug(...argv: any[])
 {
 	loggerShow.debug(...argv)
 }
 
-export function consoleLog(...argv)
+export function consoleLog(...argv: any[])
 {
 	loggerShow.log(...argv)
 }
 
-export function consoleInfo(...argv)
+export function consoleInfo(...argv: any[])
 {
 	loggerShow.info(...argv)
 }
 
-export function consoleError(...argv)
+export function consoleError(...argv: any[])
 {
 	loggerShow.error(...argv)
 }

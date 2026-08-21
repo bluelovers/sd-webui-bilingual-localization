@@ -1,6 +1,7 @@
 import { consoleDebug, logger, loggerShow } from './logger';
 import { getConfig, loadLocalization } from './options';
 import { initObserver, translateAll } from './translate';
+// @ts-ignore
 import P from 'core-js-pure/actual/promise';
 
 loggerShow.init('Bilingual', true);

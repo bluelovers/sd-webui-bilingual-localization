@@ -4,7 +4,7 @@ import { getWebuiOpts } from './dom';
 export const i18nRegex = new Map()
 export let i18nScope: Record<string, Record<string, string>> = {};
 export let scopedSource: Record<string, string[]> = {};
-export let i18n: Record<string, string> = null;
+export let i18n: Record<string, string> = null as any;
 
 const regex_scope = /^##(?<scope>.+)##(?<skey>.+)$/ // ##scope##.skey
 
@@ -37,7 +37,7 @@ function initLocalization()
 	i18nRegex.clear();
 	i18nScope = {};
 	scopedSource = {};
-	i18n = null;
+	i18n = null as any;
 }
 
 export function getConfig()
@@ -105,7 +105,7 @@ export async function loadLocalization(dirs: IDirs, file: string)
 		else if (regex_scope.test(key))
 		{
 			// parse scope translations
-			let { scope, skey } = key.match(regex_scope).groups
+			let { scope, skey } = key.match(regex_scope)!.groups!
 
 			if (scope.startsWith('@'))
 			{

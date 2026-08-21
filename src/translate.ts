@@ -227,7 +227,7 @@ function delegateEvent(parent: ReturnType<typeof gradioApp>, eventType: string, 
 	{
 		let target = event.target as IEvent["target"];
 
-		if (target = target.closest(selector))
+		if (target = target.closest(selector) as any as IEvent["target"])
 		{
 			const label = 'handleDropdown:event';
 			logger.debug(`${label}:start`, event);
@@ -277,19 +277,19 @@ async function handleDropdown()
 		}
 
 		const source = target.dataset['value']
-		const $labelEl = target?.closest('.wrap')?.querySelector<IElement>('.wrap-inner .single-select') // the label element
+		const $labelEl = target?.closest('.wrap')?.querySelector<Element>('.wrap-inner .single-select') // the label element
 
 		if (source && $labelEl)
 		{
 			const title = titles?.[source];
-			if (title?.length && $labelEl.title !== title)
+			if (title?.length && ($labelEl as any).title !== title)
 			{
-				$labelEl.title = title
+				($labelEl as any).title = title
 				// set title from hints.js
 			}
 
 			//$labelEl.textContent = EnumBiligualPlaceholder.will_be_replaced // marked as will be replaced
-			doTranslate($labelEl, source, EnumTranslateType.element, (...argv) => {
+			doTranslate($labelEl as any, source, EnumTranslateType.element, (...argv) => {
 				ESBUILD_DEBUG && logger.debug(label, 'doTranslate', argv)
 			}) // translate the label element
 		}
