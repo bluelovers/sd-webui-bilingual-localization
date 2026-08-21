@@ -53,12 +53,10 @@ def list_localizations():
 def refresh_list_localizations(node=None):
     list_localizations()
 
-    if hasattr(shared.opts.data, "bilingual_localization_dirs") or node is not None:
-
-        shared.opts.data["bilingual_localization_dirs"] = I18N_DIRS
-        shared.opts.set("bilingual_localization_dirs", I18N_DIRS)
-        if node is not None:
-            node.value = I18N_DIRS
+    shared.opts.data["bilingual_localization_dirs"] = I18N_DIRS
+    shared.opts.set("bilingual_localization_dirs", I18N_DIRS)
+    if node is not None:
+        node.value = I18N_DIRS
 
 
 # Register extension options

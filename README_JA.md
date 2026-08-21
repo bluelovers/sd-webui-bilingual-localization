@@ -52,6 +52,15 @@ git clone https://github.com/journey-ad/sd-webui-bilingual-localization extensio
 
 ![Snipaste_2023-02-28_00-04-21](https://user-images.githubusercontent.com/16256221/221625729-73519629-8c1f-4eb5-99db-a1d3f4b58a87.png)
 
+## トラブルシューティング
+
+> **⚠️ プラグインが正常に動作しない場合**   
+> sd-webui の `config.json` を開き、`bilingual_localization_dirs` エントリを削除するか、ローカリゼーションファイルのパスを手動で設定してください：
+>
+> ```json
+> "bilingual_localization_dirs": "{\"zh_Hans\": \"extensions/stable-diffusion-webui-localization-zh_Hant/localizations/zh_Hans.json\", \"zh_Hant\": \"extensions/stable-diffusion-webui-localization-zh_Hant/localizations/zh_Hant.json\"}"
+> ```
+
 ## スコープ
 
 ローカリゼーションは、グローバルな影響を防ぐためにスコープを限定したサポートを提供します。構文規則は以下の通りです：

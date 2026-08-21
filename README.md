@@ -51,6 +51,15 @@ In <kbd>Settings</kbd> - <kbd>Bilingual Localization</kbd> panel, select the loc
 
 ![Snipaste_2023-02-28_00-04-21](https://user-images.githubusercontent.com/16256221/221625729-73519629-8c1f-4eb5-99db-a1d3f4b58a87.png)
 
+## Troubleshooting
+
+> **⚠️ If the plugin is not working properly**   
+> Open sd-webui's `config.json` and delete the `bilingual_localization_dirs` entry, or manually set it to the path of your localization files:
+>
+> ```json
+> "bilingual_localization_dirs": "{\"zh_Hans\": \"extensions/stable-diffusion-webui-localization-zh_Hant/localizations/zh_Hans.json\", \"zh_Hant\": \"extensions/stable-diffusion-webui-localization-zh_Hant/localizations/zh_Hant.json\"}"
+> ```
+
 ## Scoped
 
 Localization supports scoped to prevent global polluting. The syntax rules are as follows:
