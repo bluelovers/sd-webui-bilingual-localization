@@ -99,6 +99,5 @@
     "stable-diffusion-webui-types": "^1.0.3",
     "ts-type": "^3.0.13",
     "tslib": ">=2"
-  },
-  "packageManager": "pnpm@12.0.0-rc.7"
+  }
 }
