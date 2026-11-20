@@ -238,16 +238,6 @@ function delegateEvent(parent: ReturnType<typeof gradioApp>, eventType: string, 
 			logger.timeEnd(`${label}:done`)
 		}
 
-//		while (target !== parent)
-//		{
-//			if (target.matches(selector))
-//			{
-//				handler.call(target, event as IEvent);
-//			}
-//			target = target.parentNode;
-//		}
-
-
 	});
 }
 
@@ -288,7 +278,7 @@ async function handleDropdown()
 				// set title from hints.js
 			}
 
-			//$labelEl.textContent = EnumBiligualPlaceholder.will_be_replaced // marked as will be replaced
+			// set title from hints.js
 			doTranslate($labelEl as any, source, EnumTranslateType.element, (...argv) => {
 				ESBUILD_DEBUG && logger.debug(label, 'doTranslate', argv)
 			}) // translate the label element

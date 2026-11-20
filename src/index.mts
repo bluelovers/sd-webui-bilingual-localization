@@ -2,16 +2,22 @@
 
 import { run } from './main'
 import P from 'core-js-pure/actual/promise';
-import { consoleError, consoleInfo, logger, consoleDebug } from './logger';
+import {
+	consoleError,
+	consoleInfo,
+	logger,
+	consoleDebug,
+	loggerLabel,
+} from './logger';
 import { existsWebuiOpts, getWebuiOpts } from './dom';
 
 (async () =>
 {
 	let loaded: boolean;
 
-	const label = 'Bilingual';
+	const label = loggerLabel;
 
-	logger.init('Bilingual');
+	logger.init(loggerLabel);
 
 	consoleDebug(`${label}:init`);
 	ESBUILD_DEBUG && consoleDebug(`${label}:debug mode enabled`);

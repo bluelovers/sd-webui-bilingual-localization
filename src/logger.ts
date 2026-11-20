@@ -1,4 +1,7 @@
 
+/** Shared badge label for every logger init site. */
+export const loggerLabel = 'Bilingual' as const;
+
 function createLogger()
 {
 	const loggerTimerMap = new Map()

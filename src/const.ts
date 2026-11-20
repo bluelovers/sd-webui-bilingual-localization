@@ -1,5 +1,5 @@
 export const ignore_selector = ([
-	'.bilingual__trans_wrapper', // self
+	`.${EnumBiligualPlaceholder.trans_wrapper}`, // self
 	'.resultsFlexContainer', // tag-autocomplete
 	'#setting_sd_model_checkpoint select', // model checkpoint
 	'#setting_sd_vae select', // vae model
@@ -9,13 +9,12 @@ export const ignore_selector = ([
 
 	'#tags > #tags a',
 
-	'.bilingual__trans_ignore',
+	`.${EnumBiligualPlaceholder.trans_ignore}`,
 
 	...[
 		'svg',
 		'canvas',
 
-		'.bilingual__trans_source',
 		'#txt2img_prompt_container',
 		'#img2img_prompt_container',
 

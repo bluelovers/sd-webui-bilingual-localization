@@ -25,11 +25,6 @@ function readFile(filePath: string)
 	return fetch(`file=${filePath}`, {
 		method: 'GET',
 	}).then(res => res.text())
-
-//	let request = new XMLHttpRequest();
-//	request.open("GET", `file=${filePath}`, false);
-//	request.send(null);
-//	return request.responseText;
 }
 
 function initLocalization()
