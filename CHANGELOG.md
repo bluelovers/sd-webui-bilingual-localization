@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0 (2026-11-20)
+
+
+
+### ♻️　Chores
+
+* **deps:** 更新 ci:install 指令中的依賴套件 ([76149e1](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/76149e12ff0b0b420343427f7d6fe9eacddb8e23))
+* **deps:** 移除 packageManager 設定 ([e9e1438](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/e9e1438ae85efe50f410b455a7861f96b566914f))
+
+
+
 # 1.0.0 (2024-06-09)
 
 
