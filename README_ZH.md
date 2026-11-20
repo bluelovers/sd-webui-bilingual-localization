@@ -48,6 +48,15 @@ git clone https://github.com/journey-ad/sd-webui-bilingual-localization extensio
 在<kbd>Settings</kbd> - <kbd>Bilingual Localization</kbd>中选择要启用的本地化文件，依次点击<kbd>Apply settings</kbd>和<kbd>Reload UI</kbd>按钮
 ![Snipaste_2023-02-28_00-04-21](https://user-images.githubusercontent.com/16256221/221625729-73519629-8c1f-4eb5-99db-a1d3f4b58a87.png)
 
+## 故障排除
+
+> **⚠️ 如果插件無法正常運作**   
+> 開啟 sd-webui 的 `config.json`，刪除 `bilingual_localization_dirs` 設定，或手動設定為你的本地化檔案路徑：
+>
+> ```json
+> "bilingual_localization_dirs": "{\"zh_Hans\": \"extensions/stable-diffusion-webui-localization-zh_Hant/localizations/zh_Hans.json\", \"zh_Hant\": \"extensions/stable-diffusion-webui-localization-zh_Hant/localizations/zh_Hant.json\"}"
+> ```
+
 ## 作用域支持
 
 本地化语料支持限定作用域，防止影响全局翻译，语法规则：
