@@ -46,7 +46,7 @@
     "build:dts:tsc:emit": "tsc --emitDeclarationOnly --declaration --noEmit false",
     "build:microbundle": "ynpx microbundle --target node",
     "build:tsdx": "ynpx @bluelovers/tsdx build --target node --name index",
-    "ci:install": "pnpm install --frozen-lockfile && pnpm add -w yarn-tool lerna@6 ynpx ts-node ts-jest jest typescript@next @bluelovers/jest-config tsx",
+    "ci:install": "pnpm install --frozen-lockfile && pnpm add -w typescript tsx ynpx @yarn-tool/changelog",
     "ci:build": "pnpm run postpublish:changelog && pnpm run ci:build:core && pnpm run ci:build:commit && pnpm run postpublish",
     "ci:build:core": "tsx ./build.ts && tsx ./test/scripts/copy.ts",
     "ci:build:commit": "git add ./output & echo ci:build:commit",
