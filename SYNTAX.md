@@ -5,6 +5,39 @@
 
 ---
 
+## 零、快速總覽
+
+三種 key 形式：
+
+```json
+{
+  // ① 一般 key：無前綴，「原文」→「譯文」精確比對 → 見 §二-1
+  "Save": "儲存",
+
+  // ② Scope key：##範圍##原文 — 只在特定容器內才翻譯 → 見 §二-3
+  "##@.some_class##原文": "譯文", // @ 後接任意 CSS 選擇器（class / ID / 複合）
+  "##some_id##原文": "譯文",       // 無 @ = 自動補 #，後方只能是 ID 名稱
+
+  // ③ Regex key：@@ 開頭 = 正則比對，value 可用 $1 / $& 替換 → 見 §二-2
+  "@@/^model_(\\w+)$/": "model_$1 模型", // 正則形式 A：/pattern/flags（flags 可省略）
+  "@@Step N": "步驟 N"                   // 純字串形式 B：不以 / 開頭 → 自動跳脫元字元，逐字比對
+}
+```
+
+| 形式 | 判別 | 章節 |
+|---|---|---|
+| `"原文": "譯文"` | 無前綴 | §二-1 一般 key |
+| `"@@..."` | 以 `@@` 開頭 | §二-2 Regex key |
+| `"##...##..."` | 含 `##範圍##` | §二-3 Scope key |
+
+其他常見規則：
+
+1. **純數字 / 點原文永不翻譯**（`1.5`、`.5`、`123`）。
+2. **value 用空字串 = 沒有這條翻譯**（會還原原文）。
+3. **譯文以原文開頭 → 只顯示譯文、不加雙語框**（刻意設計，見 §五）。
+
+---
+
 ## 一、檔案格式
 
 - 純 JSON 物件，頂層攤平；查詢只做 `i18n[source]` 頂層比對，**巢狀物件內的 key 無法命中**。
@@ -19,7 +52,12 @@
 
 ```json
 {
+  // 一般 key：無前綴，「原文」→「譯文」
+  // 比對前先 trim 頭尾空白、不分大小寫；純數字 / 點原文永不翻譯
   "Save": "儲存",
+
+  // value 建議寫成「原文 + (補充說明)」
+  // 若譯文以原文開頭 → 只顯示譯文、不產生雙語框（刻意設計，見 §五）
   "Style Fidelity": "风格仿真度"
 }
 ```
@@ -34,9 +72,21 @@
 
 ```json
 {
+  // @@ 開頭 = Regex key：key 去掉 "@@" 後交給 getRegex() 解析
+
+  // 形式 A — /pattern/flags 完整正則字面（需以 / 開頭且被 / 分隔 ≥3 段）
+  // $1 = 第 1 個擷取群組、$2 = 第 2 個；(?: ) 非擷取群組不佔編號
+  // $& = 整體命中；建議 ^...$ 錨定，避免被較早的通用 pattern 搶先命中
   "@@/^t2iadapter_zoedepth_(\\w+)(?: (\\[\\w+\\]))?$/": "t2iadapter_zoedepth_$1 $2 (ZoeDepth 结合相对和绝对深度)",
+
+  // flags 可加在結尾（i = 忽略大小寫）
   "@@/photomaker/i": "PhotoMaker 个性化人像",
-  "@@/step \\d+/": "步驟 $&"
+
+  // 形式 A 但 flags 為空（省略）
+  "@@/step \\d+/": "步驟 $&",
+
+  // 形式 B — 純字串（不以 / 開頭）：自動跳脫正則元字元 → 逐字比對（區分大小寫、無 flags）
+  "@@Step N": "步驟 N"
 }
 ```
 
@@ -46,7 +96,7 @@
 | 形式 | 範例 | 解析結果 |
 |---|---|---|
 | `/pattern/flags`（以 `/` 開頭且被 `/` 分隔 ≥3 段） | `"@@/photomaker/i"` | pattern `photomaker`、flags `i` |
-| 純字串 | `"@@/step \\d+/"` 以外的一般文字 | 自動跳脫 `.*+-?^${}()|[]\` 成逐字比對（區分大小寫、無 flags） |
+| 純字串 | `"@@Step N"`（不以 `/` 開頭，或分段不足 3 段） | 自動跳脫 `.*+-?^${}()|[]\` 成逐字比對（區分大小寫、無 flags） |
 
 - **value 為 `String.replace` 替換字串**，支援 `$&`（整體命中）、`$1`–`$9`（群組）、`` $` ``、`$'`、`$$`。
 - 群組編號以**實際擷取群組**計；`(?: )` 非擷取群組不佔編號（上例 `$1` = `(\w+)`、`$2` = `(\[\w+])`）。
@@ -58,10 +108,17 @@
 
 ```json
 {
+  // ##範圍##原文：scope 決定「哪些元素」套用，原文決定「比對哪段文字」
+  // @ 前綴 = 後方為「原樣 CSS 選擇器」，class / ID / 複合皆可
   "##@.controlnet_control_type_filter_group##Normal": "法线图",
+
+  // 無 @ = 自動補 # → 後方只能是 ID 名稱（寫成 ##.class## 會產生非法選擇器 #.class）
   "##txt2img_controlnet_ControlNet_controlnet_type_filter_radio##Normal": "法线图",
   "##settings_sampler-params##uniform": "均勻",
+
+  // @ 後直接接 #id 也合法（@ 只代表「原樣選擇器」），與 "##setting_emphasis##Original" 等價
   "##@#setting_emphasis##Original": "Original (原始強調實作)"
+  // ↑ 同一原文若另有全域一般 key，元素落在 scope 外時才會用到全域那條
 }
 ```
 
@@ -131,17 +188,22 @@
 
 ```json
 {
+  // ① 一般 key：無前綴，精確比對
   "Save": "儲存",
 
+  // ② Scope key：@ + class 選擇器 / 無 @ 自動補 #（ID）/ @ + #id 皆可
   "##@.controlnet_control_type_filter_group##Normal": "法线图",
   "##txt2img_controlnet_ControlNet_controlnet_type_filter_radio##Normal": "法线图",
   "##@#setting_emphasis##Original": "Original (原始強調實作)",
 
+  // ③ Regex key：$1/$2 為擷取群組，(?: ) 不佔編號；建議 ^...$ 錨定
   "@@/^t2iadapter_zoedepth_(\\w+)(?: (\\[\\w+\\]))?$/": "t2iadapter_zoedepth_$1 $2 (ZoeDepth 结合相对和绝对深度)",
-  "@@/photomaker/i": "PhotoMaker 个性化人像",
+  "@@/photomaker/i": "PhotoMaker 个性化人像", // /.../flags，i = 忽略大小寫
 
+  // 含轉義引號與括號的原文（value 內 \" 為標準 JSON 轉義）
   "Style Fidelity (only for \"Balanced\" mode)": "风格仿真度 (仅用于 \"平衡\" 模式)",
 
+  // 譯文以原文開頭 → 只顯示譯文、不加雙語框（刻意設計，見 §五）
   "IP-Adapter": "IP-Adapter (图像提示适配器)"
 }
 ```
