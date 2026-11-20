@@ -14,6 +14,7 @@ async function copy()
 		'./CHANGELOG.md',
 		'./docs/**/*',
 		'./metadata.ini',
+		'./SYNTAX.md',
 	], {
 		cwd: __ROOT,
 	}))
