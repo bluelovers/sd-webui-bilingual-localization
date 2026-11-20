@@ -7,6 +7,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+### 📚　Documentation
+
+* 新增 i18n 語法規範文件並更新複製腳本 ([2d0e45e](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/2d0e45eb1eebb865ef94969e46e7a24ce4504651))
+* **i18n:** 優化語法規範文件內容與結構 ([a962735](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/a962735b3fdad608a81bf7dbfec43e44e7af44fb))
+
+
+
+# 1.0.0 (2026-11-20)
+
+
+
 ### ♻️　Chores
 
 * **deps:** 更新 ci:install 指令中的依賴套件 ([76149e1](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/76149e12ff0b0b420343427f7d6fe9eacddb8e23))
