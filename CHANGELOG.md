@@ -9,6 +9,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### 📚　Documentation
 
+* **readme:** 更新語言包推薦連結 ([6d8b7c4](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/6d8b7c49ebd61e7316609a95b7592eb4d47fbf1a))
+* **readme:** 更新多語言說明文件以補充功能細節與修正連結 ([b6b96e7](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/b6b96e743c3a21c53264d92da7d5b49f77541c47))
+
+
+
+# 1.0.0 (2026-11-20)
+
+
+
+### 📚　Documentation
+
 * 新增 i18n 語法規範文件並更新複製腳本 ([2d0e45e](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/2d0e45eb1eebb865ef94969e46e7a24ce4504651))
 * **i18n:** 優化語法規範文件內容與結構 ([a962735](https://github.com/journey-ad/sd-webui-bilingual-localization/commit/a962735b3fdad608a81bf7dbfec43e44e7af44fb))
 

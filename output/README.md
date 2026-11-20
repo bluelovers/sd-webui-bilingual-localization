@@ -51,6 +51,10 @@ In <kbd>Settings</kbd> - <kbd>Bilingual Localization</kbd> panel, select the loc
 
 ![Snipaste_2023-02-28_00-04-21](https://user-images.githubusercontent.com/16256221/221625729-73519629-8c1f-4eb5-99db-a1d3f4b58a87.png)
 
+> Optional: set `bilingual_localization_order` to `Original First` to display the original text before the translation (swaps their positions).
+
+> Note: if a translation already starts with the original text, only the translation is shown — no bilingual wrapper is generated.
+
 ## Troubleshooting
 
 > **⚠️ If the plugin is not working properly**   
@@ -65,6 +69,8 @@ In <kbd>Settings</kbd> - <kbd>Bilingual Localization</kbd> panel, select the loc
 Localization supports scoped to prevent global polluting. The syntax rules are as follows:
 - `##<SCOPE ID>##<TEXT>` Scoped text will only take effect when the ancestor element ID matches the specified scope.
 - `##@<SELECTOR>##<TEXT>` Scoped text will only take effect when the ancestor element matches the specified CSS selector.
+- If the element lies outside every scope, translation falls back to the global entry.
+- Always prefix non-ID selectors with `@`: `##.class##` would be rewritten to the invalid selector `#.class`.
 
 ```json
 {
@@ -78,7 +84,10 @@ Localization supports scoped to prevent global polluting. The syntax rules are a
 
 ## RegExp pattern
 
-Localization support RegExp pattern, syntax rule is `@@<REGEXP>`, capturing group is `$n`, doc: [String.prototype.replace()](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String/replace)
+Localization supports RegExp patterns. The key must be written as `@@</pattern/flags>` — the pattern wrapped in `/.../`, flags optional; a key without `/.../` is escaped and matched literally. Capturing groups are referenced as `$n`, doc: [String.prototype.replace()](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String/replace)
+
+Patterns are checked in the order they appear in the file and the first match wins — anchor with `^...$` so an earlier generic pattern cannot steal the match, and avoid the `g` flag.
+
 ```json
 {
   ...
@@ -88,6 +97,18 @@ Localization support RegExp pattern, syntax rule is `@@<REGEXP>`, capturing grou
 }
 ```
 
+Full syntax reference: [SYNTAX.md](SYNTAX.md).
+
+## Ignoring elements
+
+Add these classes to an element to keep it from being translated:
+
+- `.bilingual__trans_ignore` — ignore the element itself.
+- `.bilingual__trans_ignore_deep` — ignore the element and all of its descendants.
+
 ## How to get localization file
 
 Localization files are no longer provided with the plugin, please install a third-party language extensions and set-up as described in the [Usage](#usage) section of this article.
+
+Recommended language pack: https://github.com/bluelovers/stable-diffusion-webui-localization-zh_Hant
+Japanese language pack: https://github.com/L4Ph/stable-diffusion-webui-localization-ja_JP
