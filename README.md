@@ -110,4 +110,5 @@ Add these classes to an element to keep it from being translated:
 
 Localization files are no longer provided with the plugin, please install a third-party language extensions and set-up as described in the [Usage](#usage) section of this article.
 
-*The language pack shown in the preview images can be found here: https://gist.github.com/journey-ad/d98ed173321658be6e51f752d6e6163c*
+Recommended language pack: https://github.com/bluelovers/stable-diffusion-webui-localization-zh_Hant
+Japanese language pack: https://github.com/L4Ph/stable-diffusion-webui-localization-ja_JP

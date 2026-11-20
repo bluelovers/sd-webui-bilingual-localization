@@ -109,4 +109,5 @@ git clone https://github.com/bluelovers/sd-webui-bilingual-localization.git exte
 
 内蔵の日本語化ファイルは提供されなくなりました。サードパーティーの日本語化拡張機能をインストールし、当ページの[使用方法](#使用方法)に記載されている方法でセットアップしてください。
 
-*プレビュー画像の言語パックはこちら：https://gist.github.com/journey-ad/d98ed173321658be6e51f752d6e6163c*
+推奨言語パック：https://github.com/bluelovers/stable-diffusion-webui-localization-zh_Hant
+日本語パック：https://github.com/L4Ph/stable-diffusion-webui-localization-ja_JP

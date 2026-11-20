@@ -107,4 +107,5 @@ git clone https://github.com/bluelovers/sd-webui-bilingual-localization.git exte
 
 本地化文件不再随插件提供，请安装第三方语言包并按照本文[使用](#使用)部分的方式设置使用
 
-*预览图片中的语言包可以在这里找到 https://gist.github.com/journey-ad/d98ed173321658be6e51f752d6e6163c*
+推荐语言包：https://github.com/bluelovers/stable-diffusion-webui-localization-zh_Hant
+日文语言包：https://github.com/L4Ph/stable-diffusion-webui-localization-ja_JP
